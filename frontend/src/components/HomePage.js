@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import RoomJoinPage from "./RoomJoinPage";
 import CreateRoomPage from "./CreateRoomPage";
+import Room from "./Room";
 import {
   BrowserRouter as Router,
-  Routes,
+  Routes, // fka switch
   Route,
   Link,
   Redirect,
@@ -16,11 +17,14 @@ export default class HomePage extends Component {
 
   render() {
     return (
+      // routes are the new syntax, component is now element and the element has to be in html style
+      // e.g. `element={< RoomJoinPage />}` is now corect and  `component={RoomJoinPage}` is not
       <Router>
         <Routes>
           <Route exact path="/" element={<p>This is the home page</p>} />
           <Route path="/join" element={< RoomJoinPage />} />
           <Route path="/create" element={< CreateRoomPage />} />
+          <Route path="/room/:roomCode" element={< Room />} />
         </Routes>
       </Router>
     );
