@@ -7,9 +7,9 @@ export default function Room(props) {
   const[votesToSkip,setVotesToSkip] = useState(2)
   const[guestCanPause,setGuestCanPause] = useState(false)
   const[isHost,setIsHost] = useState(false)
-  const { roomCode } = useParams()
+  const { code } = useParams()
 
-  fetch('/api/get-room?code='+roomCode)
+  fetch('/api/get-room?code='+code)
   .then((response) => response.json())
   .then((data) => {
     setVotesToSkip(data.votes_to_skip);
@@ -18,7 +18,7 @@ export default function Room(props) {
   });
 
   return <div>
-    <h3>Room {roomCode}</h3>
+    <h3>Room {code}</h3>
     <p>Votes: {votesToSkip}</p>
     <p>Guest Can Pause: {guestCanPause.toString()}</p>
     <p>Host: {isHost.toString()}</p>
