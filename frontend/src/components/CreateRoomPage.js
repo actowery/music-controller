@@ -11,7 +11,7 @@ import {
   RadioGroup,
   FormControlLabel,
 } from '@material-ui/core'
-import {Link, useNavigate} from "react-router-dom"
+import {Link, useNavigate} from 'react-router-dom'
 
 export const CreateRoomPage = () => {
   //must be top level - this one was a noodle scratcher for a while
@@ -52,7 +52,6 @@ export const CreateRoomPage = () => {
       })
     })
     const JsonFeedBack = await feedBack.json()
-    console.log("JsonFeedBack")
     console.log(JsonFeedBack)
     let newRoom = JsonFeedBack.code
     let path = '/room/' + newRoom; 

@@ -4,7 +4,7 @@ from .serializers import RoomSerializer, CreateRoomSerializer
 from .models import Room
 from rest_framework.views import APIView
 from rest_framework.response import Response
-import sys
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -39,7 +39,7 @@ class JoinRoom(APIView):
             room_result = Room.objects.filter(code=code)
             if room_result.exists():
                 room = room_result[0]
-                self.request.session['room_code'] = code
+                self.request.session['code'] = code
                 return Response({'message': 'Successfully Joined Room'}, status.HTTP_200_OK)
             return Response({'Bad Request': 'Room not Found'}, status.HTTP_404_NOT_FOUND)
         return Response({'Bad Request': 'Invalid post data, not found'}, status=status.HTTP_400_BAD_REQUEST)
@@ -62,13 +62,23 @@ class CreateRoomView(APIView):
                 room.guest_can_pause = guest_can_pause
                 room.votes_to_skip = votes_to_skip
                 room.save(update_fields=['guest_can_pause', 'votes_to_skip'])
-                self.request.session['room_code'] = room.code
+                self.request.session['code'] = room.code
                 return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
             else:
                 room = Room(host=host, guest_can_pause=guest_can_pause,
                             votes_to_skip=votes_to_skip)
                 room.save()
-                self.request.session['room_code'] = room.code
+                self.request.session['code'] = room.code
                 return Response(RoomSerializer(room).data, status=status.HTTP_201_CREATED)
 
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
+
+class UserInRoom(APIView):
+    def get(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+
+        data = {
+            'code': self.request.session.get('code')
+        }
+        return JsonResponse(data, status=status.HTTP_200_OK)
